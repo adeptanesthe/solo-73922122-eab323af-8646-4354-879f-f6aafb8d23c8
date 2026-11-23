@@ -1,0 +1,16 @@
+services:
+  jacquard-api:
+    build: .
+    image: jacquard-pattern-api:1.0.0
+    container_name: jacquard-pattern-api
+    ports:
+      - "8000:8000"
+    volumes:
+      # 草案 SQLite 持久化到宿主机，容器重建不丢草案
+      - ./data:/app/data
+      # 演示图片只读挂载，便于容器内复现请求
+      - ./demo:/app/demo:ro
+    environment:
+      # CP-SAT 单线程，保证 5 秒墙钟限时行为稳定
+      OMP_NUM_THREADS: "1"
+    restart: unless-stopped
